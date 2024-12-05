@@ -7,31 +7,30 @@ pipe = pipeline(
     "text-generation",
     model=model_id,
     torch_dtype=torch.bfloat16,
-    device_map="cpu",
+    device_map="auto",
 )
 
 input_query = "What are the names of employees who earn more than $50,000 per year?"
 
 prompt = f"""
-You are an advanced AI assistant with expertise in natural language processing and SQL generation. Your primary role is to act as a rewriter that bridges natural language queries and SQL operations. Your output must meet the following criteria:
+You are an advanced AI assistant with expertise in natural language processing. Your primary role is to act as a rewriter that refines natural language queries for better understanding and alignment with SQL operations. Your task is to rewrite the given user prompt by fixing typos, improving clarity, and making it more precise and unambiguous. You are NOT required to generate SQL, only to rewrite the user prompt.
 
-1. **Clarity**: Ensure the rewritten query is unambiguous, concise, and easy to interpret.
-2. **SQL-Alignment**: Rewrite the query to align with SQL operations, using terminology and structure that closely matches SQL syntax and semantics.
-3. **Preservation of Intent**: Retain the full meaning and intent of the original query without omitting any critical information.
-4. **Formal Language**: Use formal and precise language to enhance readability and compatibility with SQL.
+Your output must meet the following criteria:
+1. **Clarity**: Ensure the rewritten prompt is unambiguous, concise, and easy to interpret.
+2. **Preservation of Intent**: Retain the full meaning and intent of the original user prompt without omitting any critical information.
+3. **Formal Language**: Use formal and precise language to enhance readability.
+4. **Fixing Errors**: Correct any typos, grammatical errors, or ambiguous phrasing.
 5. **Human-Readability**: Optimize the output so that it is understandable for both technical and non-technical users.
-
-Here is the query you need to rewrite:
-
-### Input Query:
-"{input_query}"
-
-### Rewritten Query:
 """
 
+messages = [
+    {"role": "system", "content": prompt},
+    {"role": "user", "content": input_query},
+]
+
 outputs = pipe(
-    prompt,
+    messages,
+    max_new_tokens=256,
 )
 
-rewritten_query = outputs[0]["generated_text"]
-print("Rewritten Query:\n", rewritten_query)
+print(outputs[0]["generated_text"][-1])
