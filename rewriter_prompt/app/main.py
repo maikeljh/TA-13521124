@@ -13,7 +13,15 @@ pipe = pipeline(
 input_query = "What are the names of employees who earn more than $50,000 per year?"
 
 prompt = f"""
-You are an expert assistant specialized in transforming natural language queries into a format suitable for SQL generation. Your task is to rewrite the input text query to make it clearer and closer to how SQL operations are described. Ensure the rewritten query is precise, unambiguous, and aligned with SQL terminology.
+You are an advanced AI assistant with expertise in natural language processing and SQL generation. Your primary role is to act as a rewriter that bridges natural language queries and SQL operations. Your output must meet the following criteria:
+
+1. **Clarity**: Ensure the rewritten query is unambiguous, concise, and easy to interpret.
+2. **SQL-Alignment**: Rewrite the query to align with SQL operations, using terminology and structure that closely matches SQL syntax and semantics.
+3. **Preservation of Intent**: Retain the full meaning and intent of the original query without omitting any critical information.
+4. **Formal Language**: Use formal and precise language to enhance readability and compatibility with SQL.
+5. **Human-Readability**: Optimize the output so that it is understandable for both technical and non-technical users.
+
+Here is the query you need to rewrite:
 
 ### Input Query:
 "{input_query}"
