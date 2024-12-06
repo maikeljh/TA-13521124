@@ -7,7 +7,7 @@ pipe = pipeline(
     "text-generation",
     model=model_id,
     torch_dtype=torch.bfloat16,
-    device_map="auto",
+    device_map="cpu",
 )
 
 input_query = "What are the names of employees who earn more than $50,000 per year?"
@@ -21,16 +21,23 @@ Your output must meet the following criteria:
 3. **Formal Language**: Use formal and precise language to enhance readability.
 4. **Fixing Errors**: Correct any typos, grammatical errors, or ambiguous phrasing.
 5. **Human-Readability**: Optimize the output so that it is understandable for both technical and non-technical users.
+
+### User Prompt:
+{input_query}
+
+### Rewritten Prompt:
 """
 
-messages = [
-    {"role": "system", "content": prompt},
-    {"role": "user", "content": input_query},
-]
-
 outputs = pipe(
-    messages,
+    prompt,
     max_new_tokens=256,
 )
 
-print(outputs[0]["generated_text"][-1])
+generated_text = outputs[0]["generated_text"]
+
+if "### Rewritten Prompt:" in generated_text:
+    rewritten_prompt = generated_text.split("### Rewritten Prompt:")[-1].strip()
+else:
+    rewritten_prompt = generated_text.strip()
+
+print("Rewritten Prompt:\n", rewritten_prompt)
